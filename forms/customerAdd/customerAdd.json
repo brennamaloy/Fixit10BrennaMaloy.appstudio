@@ -16,7 +16,7 @@
         "forms",
         "customerAdd",
         "Elements",
-        "drpDelete1.json"
+        "lblCustomerAdd.json"
       ]
     },
     {
@@ -25,7 +25,7 @@
         "forms",
         "customerAdd",
         "Elements",
-        "lblDelete1.json"
+        "txtAdd.json"
       ]
     },
     {
@@ -34,7 +34,7 @@
         "forms",
         "customerAdd",
         "Elements",
-        "txtDelete1.json"
+        "Button1.json"
       ]
     },
     {
@@ -43,7 +43,7 @@
         "forms",
         "customerAdd",
         "Elements",
-        "btnAdd1.json"
+        "btnAddCustomer.json"
       ]
     }
   ],
