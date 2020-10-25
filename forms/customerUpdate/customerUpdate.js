@@ -3,37 +3,84 @@ req = ""
 query = ""
 results = ""
 
-btnAddCustomer.onclick = function() {
-  query = "INSERT INTO customer VALUES ('17','Jesse Antiques','1113 F St','Omaha','NE','68178')"
+customerUpdate.onshow = function() {
+  drpUpdate.clear()
+  query = "SELECT name from customer"
   req = Ajax("https://ormond.creighton.edu/courses/375/ajax-connection.php", "POST", "host=ormond.creighton.edu&user=bkm91466&pass=" + pw + "&database=bkm91466&query=" + query)
 
   if (req.status == 200) { //transit worked.
-    if (req.responseText == 500) { // means the insert succeeded
-      console.log("You have successfully added the Customer!")
-    } else
-     console.log("There was a problem with adding the Customer to the database.")
-  } else {
-    // transit error
-    NSB.MsgBox("Error: " + req.status);
-  }
-
-  query = `SELECT name from customer ORDER BY customer_id DESC`
-  req = Ajax("https://ormond.creighton.edu/courses/375/ajax-connection.php", "POST", "host=ormond.creighton.edu&user=bkm91466&pass=" + pw + "&database=bkm91466&query=" + query)
-
-  if (req.status == 200) { //transit worked.
-    //save the sate of the customer 
     results = JSON.parse(req.responseText)
-  } else {
-    // transit error
-    console.log(`Error: ${req.status}`);
+    console.log(results)
   }
-  // putting new list of customers into txtDelete
-  let customersAdd = ""
-  for (i = 0; i <= results.length - 1; i++)
-    customersAdd = customersAdd + results[i] + "\n"
-  // change value of text area
-  txtAdd.value = customersAdd
+  if (results.length == 0) {
+    // if no customers in a table brings back this message
+    console.log("There are no customers to Update.")
+  } else {
+    //a loop that adds all the customers in the array to the dropdown.
+    for (i = 0; i <= results.length - 1; i++)
+      drpUpdate.addItem(results[i])
+  }
 }
-Button1.onclick=function(){
-  ChangeForm(customerUpdate)
+//great global variable to save choosen name 
+let oldName = ''
+
+drpUpdate.onclick = function(s) {
+  // check to see if dropdown was clicked
+  if (typeof(s) == "object")
+    return
+  else {
+    drpUpdate.value = s // make dropdown show the choice the user made
+    oldName = s
+  }
+}
+
+
+btnChange.onclick = function() {
+  let newName = inpNewName.value
+
+  let found = false
+  for (i = 0; i <= results.length - 1; i++)
+    // console.log(`FOUND IS false and name is ${results[i]}`)
+    if (oldName == results[i]) {
+      found = true
+      break
+    }
+
+  if (found == false)
+    console.log("That customer name is not in the database.")
+  else if (found == true) {
+    query = `UPDATE customer SET name = '${newName}' WHERE name = '${oldName}'`
+    //alert(query)
+    req = Ajax("https://ormond.creighton.edu/courses/375/ajax-connection.php", "POST", "host=ormond.creighton.edu&user=bkm91466&pass=" + pw + "&database=bkm91466&query=" + query)
+
+    if (req.status == 200) { //transit worked.
+      if (req.responseText == 500) { // means the update succeeded
+       console.log(`You have successfully changed the customers name!`)
+        // reset controls to original state
+        inpNewName.value = ""
+        drpUpdate.value = "Customer"
+      } else
+        console.log(`There was a problem changing the Customers name.`)
+    } else
+      // transit error
+      console.log(`Error: ${req.status}`);
+  } // found is true
+  // loat txtarea
+  query = "SELECT name from customer"
+  req = Ajax("https://ormond.creighton.edu/courses/375/ajax-connection.php", "POST", "host=ormond.creighton.edu&user=bkm91466&pass=" + pw + "&database=bkm91466&query=" + query)
+
+  if (req.status == 200) { //transit worked.
+    results = JSON.parse(req.responseText)
+  }
+ if (results.length == 0) {
+    // if no customers in a table brings back this message
+    console.log("There are no customers in tabel.")
+  } else {
+    // putting new list of customers into txtDelete
+    let customersUpdate = ""
+    for (i = 0; i <= results.length - 1; i++)
+      customersUpdate = customersUpdate + results[i] + "\n"
+    // change value of text area
+    txtUpdatedList.value = customersUpdate
+  }
 }
