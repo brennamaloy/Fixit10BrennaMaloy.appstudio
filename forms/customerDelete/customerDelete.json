@@ -16,7 +16,7 @@
         "forms",
         "customerDelete",
         "Elements",
-        "drpCustomer1.json"
+        "drpDelete.json"
       ]
     },
     {
@@ -25,7 +25,7 @@
         "forms",
         "customerDelete",
         "Elements",
-        "lblSelect1.json"
+        "lblDelete.json"
       ]
     },
     {
@@ -34,7 +34,7 @@
         "forms",
         "customerDelete",
         "Elements",
-        "txtResults1.json"
+        "txtDelete.json"
       ]
     },
     {
@@ -43,7 +43,7 @@
         "forms",
         "customerDelete",
         "Elements",
-        "btnNextPage1.json"
+        "btnAdd.json"
       ]
     }
   ],
