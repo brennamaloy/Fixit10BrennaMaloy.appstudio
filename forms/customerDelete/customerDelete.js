@@ -1,64 +1,78 @@
 // global variables for database calls
-let req = ""
-let query = ""
-let results = ""
+req = ""
+query = ""
+results = ""
 
 
-customerSelect.onshow=function(){
-  drpCustomer.clear()
+drpDelete.onshow=function(){
+  drpDelete.clear()
   query = "SELECT name from customer"
   req = Ajax("https://ormond.creighton.edu/courses/375/ajax-connection.php", "POST", "host=ormond.creighton.edu&user=bkm91466&pass=" + pw + "&database=bkm91466&query=" + query)
 
   if (req.status == 200) { //transit worked.
-    customerSelectR = JSON.parse(req.responseText)
-    console.log(customerSelectR)
+    customerDeleteR = JSON.parse(req.responseText)
+    console.log(customerDeleteR)
   }
-  if (customerSelectR.length == 0) {
+  if (customerDeleteR.length == 0) {
     // if no customers in a table brings back this message
-    NSB.MsgBox("There are no customers found.")
+    txtDelete.value = "There are no customers to delete."
   } else {
     //a loop that adds all the customers in the array to the dropdown.
-    for (i = 0; i <= customerSelectR.length - 1; i++)
-      drpCustomer.addItem(customerSelectR[i])
+    for (i = 0; i <= customerDeleteR.length - 1; i++)
+      drpDelete.addItem(customerDeleteR[i])
   }
 }
 
-drpCustomer.onclick=function(s){
-  // this 'if' kicks user out if they  just clicked on control
-  // but not on one item in the list.
+drpDelete.onclick = function(s) {
+  // check to see if dropdown was clicked
   if (typeof(s) == "object")
     return
-  else { // the user picked something
-    console.log(s)
-    drpCustomer.value = s // make dropdown show the choice the user made
-    query = `SELECT state from customer WHERE name = '${s}'`
-    //Grab the state of the customer chosen
+  else {
+    drpDelete.value = s // make dropdown show the choice the user made
+    let DeleteName = s
+    // make sure the customers name is in the database before you try to delete it
+    let found = false
+    for (i = 0; i <= customerDeleteR.length - 1; i++) {
+      if (DeleteName == customerDeleteR[i]) {
+        found = true;
+        break;
+      }
+    }
+    if (found == false)
+      txtDelete.value = `That customer is not in the database.${DeleteName} \n ${customerDeleteR}`
+    else if (found == true) {
+      query = "DELETE FROM customer WHERE name = " + '"' + DeleteName + '"'
+      req = Ajax("https://ormond.creighton.edu/courses/375/ajax-connection.php", "POST", "host=ormond.creighton.edu&user=bkm91466&pass=" + pw + "&database=bkm91466&query=" + query)
+      
+      if (req.status == 200) { //transit worked.
+        if (req.responseText == 500) // means the insert succeeded
+          console.log(`You have successfully deleted the customer named ${DeleteName}`)
+        else
+          console.log(`There was a problem deleting ${DeleteName} from the database.`)
+      } else {
+        // transit error
+        console.log(`Error: ${req.status}`);
+      }
+    }
+    // run the ajax to get the new list of customers
+    query = `SELECT name from customer`
     req = Ajax("https://ormond.creighton.edu/courses/375/ajax-connection.php", "POST", "host=ormond.creighton.edu&user=bkm91466&pass=" + pw + "&database=bkm91466&query=" + query)
 
     if (req.status == 200) { //transit worked.
-      //save the sate of the customer
-      customerSelectState = JSON.parse(req.responseText)
-      console.log(customerSelectState)
+      //save the sate of the customer 
+      customerAfterDelete = JSON.parse(req.responseText)
+    } else {
+      // transit error
+      console.log(`Error: ${req.status}`);
     }
-    query = `SELECT name from customer WHERE state = '${customerSelectState[0]}'`
-    // get the other customers who have the same state
-    req = Ajax("https://ormond.creighton.edu/courses/375/ajax-connection.php", "POST", "host=ormond.creighton.edu&user=bkm91466&pass=" + pw + "&database=kmh76825&query=" + query)
-   
-    if (req.status == 200) { //transit worked.
-      //save the sate of the customer
-      customerSelectSameState = JSON.parse(req.responseText)
-      console.log(customerSelectSameState)
-    }
-   
-    let customerMessage = ""
-    for (i = 0; i <= customerSelectSameState.length - 1; i++)
-      customerMessage = customerMessage + customerSelectSameState[i] + "\n"
-    // clear txt and then change
-    txtResults.value = customerMessage
-  }  
+    // putting new list of customers into txtDelete
+    let customersLeft = ""
+    for (i = 0; i <= customerAfterDelete.length - 1; i++)
+      customersLeft = customersLeft + customerAfterDelete[i] + "\n"
+    // change value of text area
+    txtDelete.value = customersLeft
+  }
 }
-
-btnNextPage.onclick=function(){
-  ChangeForm(customerDelete)
+btnAdd.onclick=function(){
+  ChangeForm(customerAdd)
 }
-
