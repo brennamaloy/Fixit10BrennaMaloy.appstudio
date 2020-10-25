@@ -29,7 +29,7 @@
   "icon": "",
   "iconTitle": "",
   "id": "btnNextPage",
-  "left": 189,
+  "left": 149,
   "mAll": "",
   "mBottom": "",
   "mLeft": "",
@@ -60,7 +60,7 @@
   "size": " btn-md",
   "style": "",
   "toggleControl": "",
-  "top": 333,
-  "value": "Delete",
-  "width": "auto"
+  "top": 332,
+  "value": "Go to next page",
+  "width": 169
 }
