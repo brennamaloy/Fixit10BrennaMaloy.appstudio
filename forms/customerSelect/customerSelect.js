@@ -43,7 +43,7 @@ drpCustomer.onclick=function(s){
     }
     query = `SELECT name from customer WHERE state = '${customerSelectState[0]}'`
     // get the other customers who have the same state
-    req = Ajax("https://ormond.creighton.edu/courses/375/ajax-connection.php", "POST", "host=ormond.creighton.edu&user=bkm91466&pass=" + pw + "&database=kmh76825&query=" + query)
+    req = Ajax("https://ormond.creighton.edu/courses/375/ajax-connection.php", "POST", "host=ormond.creighton.edu&user=bkm91466&pass=" + pw + "&database=bkm91466&query=" + query)
    
     if (req.status == 200) { //transit worked.
       //save the sate of the customer
